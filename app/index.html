@@ -11,6 +11,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
@@ -25,17 +27,6 @@
     <!-- Add your site or application content here -->
     <div class="container" ng-view=""></div>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
-
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.min.js"></script>
@@ -43,14 +34,35 @@
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+    <script src="bower_components/highcharts-release/highcharts.js"></script>
+    <script src="bower_components/highcharts-release/highcharts-more.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/monthly.js"></script>
+        <script src="scripts/controllers/representative.js"></script>
+        <script src="scripts/controllers/region.js"></script>
+        <script src="scripts/controllers/territory.js"></script>
+        <script src="scripts/directives/monthly.js"></script>
+        <script src="scripts/directives/representative.js"></script>
+        <script src="scripts/directives/region.js"></script>
+        <script src="scripts/directives/territory.js"></script>
+        <script src="scripts/services/territories.js"></script>
+        <script src="scripts/services/representatives.js"></script>
+        <script src="scripts/services/orders.js"></script>
+        <script src="scripts/services/datasource.js"></script>
+        <script src="scripts/services/utils.js"></script>
+        <script src="scripts/services/datautilities.js"></script>
         <!-- endbuild -->
 </body>
 </html>
