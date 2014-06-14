@@ -4,9 +4,13 @@
 
     function onDataLoad(element, data) {
 
+        var names =  _(data).pluck('rep').compact().map(function(d) {
+            return d.first_name + ' ' + d.last_name;
+        }).value()
+
         $(element).highcharts({
             chart: {
-                type: 'area'
+                type: 'column'
             },
             title: {
                 text: 'Representatives Sales'
@@ -15,7 +19,14 @@
                 //text: 'Source: WorldClimate.com'
             },
             xAxis: {
-                categories: _(data).pluck('sales_rep').compact().pluck('name').value()
+                categories: names,
+                labels: {
+                    rotation: 65,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
             },
             yAxis: [{
                 labels: {
@@ -25,7 +36,7 @@
                     }
                 },
                 title: {
-                    text: 'Amount',
+                    text: 'Revenue',
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
@@ -78,8 +89,13 @@
                     return sum + order.amount;
                 }, 0)
 
-                return {rep: v.sales_rep, amount: amount, count: v.length};
-            }).sortBy('amount').value();
+                var singleItem = _.first(v);
+                if (!singleItem) {
+                    return null;
+                }
+
+                return {rep: v[0].sales_rep, amount: amount, count: v.length};
+            }).compact().sortBy('amount').value();
 
             onDataLoad(element, graphData);
         });
