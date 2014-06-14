@@ -1,11 +1,8 @@
-<p>This is the representative/deals view.</p>
+<h3><b>Representative: </b> {{rep}}</h3>
 <table ng-table="tableParams" class="table">
   <tr ng-repeat="deal in $data">
     <td data-title="'Customer Name'" sortable="'customer_name'">
       {{deal.customer_name}}
-    </td>
-    <td data-title="'Representative'">
-      {{deal.sales_rep.first_name}} {{deal.sales_rep.last_name}}
     </td>
     <td data-title="'Date'" sortable="'close_date'">
       {{deal.close_date | date:'d MMM yyyy' }}

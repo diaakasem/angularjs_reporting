@@ -4,6 +4,7 @@
 
     function controller($scope, $routeParams, Datautils, ngTableParams, $filter) {
         var rep = $routeParams.rep;
+        $scope.rep = rep;
         $scope.data = [];
 
         function onLoad(combined) {

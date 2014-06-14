@@ -1,7 +1,17 @@
 
-<button type="button" class="btn btn-primary" ng-click="grouped = true"> Group </button>
-<button type="button" class="btn btn-default" ng-click="grouped = false"> Ungroup </button>
+<div class="row" style="margin-bottom: 10px;">
+  <div class="pull-right">
+    <button type="button" ng-class="{'btn-primary': grouped,
+      'btn-default': !grouped}"
+      class="btn" ng-click="grouped = true"> Group </button>
+    <button type="button" ng-class="{'btn-primary': !grouped,
+      'btn-default': grouped}"
+      class="btn" ng-click="grouped = false"> Ungroup </button>
+  </div>
+</div>
 
+<div class="row">
 <monthly grouped="grouped"></monthly>
+</div>
 
 
