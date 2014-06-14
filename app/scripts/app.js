@@ -2,7 +2,8 @@
 
 angular
   .module('angularjsReportingApp', [
-    'ngRoute'
+    'ngRoute',
+    'ngTable'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -29,6 +30,10 @@ angular
       .when('/territory/:region', {
         templateUrl: 'views/territory.html',
         controller: 'TerritoryCtrl'
+      })
+      .when('/representative/:rep', {
+        templateUrl: 'views/representative/deals.html',
+        controller: 'RepresentativeDealsCtrl'
       })
       .otherwise({
         redirectTo: '/'

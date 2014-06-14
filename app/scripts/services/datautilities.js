@@ -15,7 +15,13 @@
 
     function Datautils(Orders, Representatives, Territories, Utils) {
 
+        this.combined;
+
         this.loadAll = function(onLoad) {
+            var that = this;
+            if (this.combined) {
+                return onLoad(this.combined);
+            }
             var orders, reps, territories;
             Orders.load(function(data) {
                 orders = data;
@@ -23,8 +29,8 @@
                     reps = data;
                     Territories.load(function(data) {
                         territories = data;
-                        var combined = Utils.combine(orders, reps, territories);
-                        onLoad(combined);
+                        that.combined = Utils.combine(orders, reps, territories);
+                        onLoad(that.combined);
                     });
                 });
             }, ordersMapper);

@@ -2,7 +2,7 @@
 (function() {
     var Months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
 
-    function onDataLoad(element, data) {
+    function onDataLoad(element, data, onClick) {
 
         var names =  _(data).pluck('rep').compact().map(function(d) {
             return d.first_name + ' ' + d.last_name;
@@ -65,20 +65,42 @@
                 }
             },
             series: [{
-                name: "Amount",
+                name: "Revenue",
                 type: 'column',
-                data: _.pluck(data, 'amount')
+                data: _.pluck(data, 'amount'),
+                point: {
+                    events: {
+                        click: function(d) {
+                            var rep = this.category;
+                            onClick(rep);
+                        }
+                    }
+                }
             }, {
                 name: "Count",
                 type: 'line',
                 data: _.pluck(data, 'count'),
-                yAxis: 1
+                yAxis: 1,
+                point: {
+                    events: {
+                        click: function(d) {
+                            var rep = this.category;
+                            onClick(rep);
+                        }
+                    }
+                }
             }]
         });
 
     }
 
-    function controller(scope, element, Datautils) {
+    function controller(scope, location, element, Datautils) {
+
+        function onClick(rep) {
+            scope.$apply(function() { 
+                location.path('/representative/' + rep);
+            });
+        }
 
         Datautils.loadAll(function(combined) {
 
@@ -97,7 +119,7 @@
                 return {rep: v[0].sales_rep, amount: amount, count: v.length};
             }).compact().sortBy('amount').value();
 
-            onDataLoad(element, graphData);
+            onDataLoad(element, graphData, onClick);
         });
     }
 
@@ -106,7 +128,7 @@
         return {
         template: '<div></div>',
         restrict: 'E',
-            controller: ['$scope', '$element', 'Datautils', controller]
+            controller: ['$scope', '$location', '$element', 'Datautils', controller]
         };
     });
 
