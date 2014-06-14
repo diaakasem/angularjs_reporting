@@ -54,7 +54,12 @@
 
         Datautils.loadAll(function(combined) {
 
-            var graphData = _(combined).groupBy(function(d) {
+            var graphData = _(combined).filter(function(d) {
+                if (!scope.region) {
+                    return true;
+                }
+                return d.sales_rep.territory.region === scope.region;
+            }).groupBy(function(d) {
                 return d.sales_rep.territory.id;
             }).map(function(v, k) {
                 var amount = _.reduce(v, function(sum, order){ 
@@ -77,6 +82,9 @@
     .directive('territory', function () {
         return {
         template: '<div></div>',
+        scope: {
+            region: '@'
+        },
         restrict: 'E',
             controller: ['$scope', '$element', 'Datautils', controller]
         };

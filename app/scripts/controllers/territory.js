@@ -2,12 +2,8 @@
 
 (function() {
 
-    function controller($scope) {
-        $scope.awesomeThings = [
-        'HTML5 Boilerplate',
-        'AngularJS',
-        'Karma'
-        ];
+    function controller($scope, $routeParams) {
+        $scope.region = $routeParams.region;
     }
 
     angular.module('angularjsReportingApp').controller('TerritoryCtrl', controller);

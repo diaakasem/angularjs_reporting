@@ -2,7 +2,7 @@
 (function() {
     var Months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
 
-    function onDataLoad(element, data) {
+    function onDataLoad(element, data, onClick) {
         var names = _.pluck(data, 'region');
 
         $(element).highcharts({
@@ -44,13 +44,27 @@
             series: [{
                 name: "Revenue",
                 type: 'column',
-                data: _.pluck(data, 'amount')
+                data: _.pluck(data, 'amount'),
+                point: {
+                    events: {
+                        click: function(d) {
+                            var territory = this.category;
+                            onClick(territory);
+                        }
+                    }
+                }
             }]
         });
 
     }
 
-    function controller(scope, element, Datautils) {
+    function controller(scope, location, element, Datautils) {
+
+        function onClick(territory) {
+            scope.$apply(function() { 
+                location.path('/territory/' + territory);
+            });
+        }
 
         Datautils.loadAll(function(combined) {
 
@@ -69,7 +83,7 @@
                 return {region: v[0].sales_rep.territory.region, amount: amount, count: v.length};
             }).compact().sortBy('amount').value();
 
-            onDataLoad(element, graphData);
+            onDataLoad(element, graphData, onClick);
         });
     }
 
@@ -78,7 +92,7 @@
         return {
         template: '<div></div>',
         restrict: 'E',
-            controller: ['$scope', '$element', 'Datautils', controller]
+            controller: ['$scope', '$location', '$element', 'Datautils', controller]
         };
     });
 
