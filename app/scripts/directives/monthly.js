@@ -4,10 +4,10 @@
 
     var Months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
 
-    function onDataLoad(element, data) {
-
-        $(element).highcharts({
+    function onDataLoad(data) {
+        var options = {
             chart: {
+                renderTo: 'monthly_chart',
                 type: 'column'
             },
             title: {
@@ -17,7 +17,7 @@
                 //text: 'Source: WorldClimate.com'
             },
             xAxis: {
-                categories: _.pluck(data, 'month')
+                categories: _(data).sortBy('month_index').pluck('month').value()
             },
             yAxis: {
                 min: 0,
@@ -36,30 +36,55 @@
             },
             series: [{
                 name: "Sales",
-                data: _.pluck(data, 'amount')
+                data: _(data).sortBy('month_index').pluck('amount').value()
             }]
-        });
+        };
+
+        return new Highcharts.Chart(options);
 
     }
 
     function controller(scope, element, Datautils) {
 
+        scope.$watch('grouped', function(grouped) { 
+            if (scope.chart) {
+                if (grouped) {
+                    var data = [0, 0, 0, 0];
+                    _(scope.graphData).sortBy('month_index').each(function(d, i) { 
+                        data[Math.floor(i/3)] += d.amount;
+                    }).value();
+                    scope.chart.series[0].update({ data: data });
+                    scope.chart.xAxis[0].categories = ['First Quarter', 'Second Quarter', 'Third Quarter', 'Forth Quarter'];
+                } else {
+                    scope.chart.series[0].update({
+                        data: _(scope.graphData).sortBy('month_index').pluck('amount').value()
+                    });
+                    scope.chart.xAxis[0].categories = _(scope.graphData).sortBy('month_index').pluck('month').value();
+                }
+                scope.chart.series[0].isDirty = true;
+                scope.chart.xAxis[0].isDirty = true;
+                scope.chart.redraw();
+            }
+        });
+
+        $(element).attr('id', 'monthly_chart');
+
         Datautils.loadAll(function(combined) {
 
-            var graphData = _(combined).groupBy(function(d) {
+            scope.graphData = _(combined).groupBy(function(d) {
                 return d.close_date.getMonth();
             }).map(function(v, k) {
                 var amount = _.reduce(v, function(sum, order){ 
                     return sum + order.amount;
                 }, 0)
 
-                return {month: k, amount: amount};
-            }).sortBy('month').map(function(d) {
-                d.month = Months[d.month];
+                return {month_index: parseInt(k, 10), amount: amount};
+            }).sortBy('month_index').map(function(d) {
+                d.month = Months[d.month_index];
                 return d;
             }).value();
 
-            onDataLoad(element, graphData);
+            scope.chart = onDataLoad(scope.graphData);
         });
     }
 
@@ -67,6 +92,10 @@
         .directive('monthly', function () {
             return {
                 template: '<div></div>',
+                scope: {
+                    grouped: '='
+                },
+                replace: true,
                 restrict: 'E',
                 controller: ['$scope', '$element', 'Datautils', controller]
             };
